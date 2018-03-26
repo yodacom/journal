@@ -24,12 +24,15 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@expo/vector-icons": "^6.3.1",
     "apollo-cache-inmemory": "^1.1.11",
     "apollo-client": "^2.2.7",
+    "apollo-link-context": "^1.0.7",
     "apollo-link-http": "^1.5.3",
     "expo": "^25.0.0",
     "graphql": "^0.13.1",
     "graphql-tag": "^2.8.0",
+    "native-base": "^2.3.10",
     "react": "16.2.0",
     "react-apollo": "^2.0.4",
     "react-native": "0.52.0",

@@ -1,11 +1,22 @@
-import React from 'react';
-import { StyleSheet, View, Text, TouchableHighlight } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import React from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableHighlight,
+  ActivityIndicator
+} from "react-native";
+import { StackNavigator } from "react-navigation";
+import { Fab, Icon } from "native-base";
+import { graphql } from "react-apollo";
+import gql from "graphql-tag";
 
 import Post from "./components/posts/Post";
-import Posts from "./components/posts/Posts";
 import NewPost from "./components/posts/NewPost";
-import { navStyles } from './styles/navStyles';
+import Posts from "./components/posts/Posts";
+import navStyles from "./styles/navStyles";
+
+import Login from "./components/user/Login";
 
 class Home extends React.Component {
   static navigationOptions = {
@@ -14,27 +25,24 @@ class Home extends React.Component {
   };
 
   goToPost = () => {
-    this.props.navigation.navigate('Post');
+    this.props.navigation.navigate("Post");
   };
 
   newPost = () => {
-    this.props.navigation.navigate('NewPost');
+    this.props.navigation.navigate("NewPost");
   };
 
   render() {
     return (
-
       <View style={styles.container}>
         <Posts {...this.props} />
-        <TouchableHighlight onPress={this.newPost} style={styles.newPost} >
-          <Text style={styles.newPostText}>New Post +</Text>
-        </TouchableHighlight>
+        <Fab style={styles.newPost} onPress={this.newPost}>
+          <Icon name="add" />
+        </Fab>
       </View>
-
     );
   }
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -42,16 +50,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   newPost: {
-    backgroundColor: "#82d8d8",
-    padding: 20
-  },
-  newPostTextr: {
-    fontSize: 20,
-    textAlign: "center"
+    backgroundColor: "#82D8D8"
   }
 });
 
-export default StackNavigator({
+const Navigator = StackNavigator({
   Home: {
     screen: Home
   },
@@ -62,3 +65,23 @@ export default StackNavigator({
     screen: NewPost
   }
 });
+
+const NavWrapper = ({ loading, user }) => {
+  console.log(user);
+  if (loading) return <ActivityIndicator size="large" />;
+  if (!user) return <Login />;
+  return <Navigator />;
+};
+
+const userQuery = gql`
+  query userQuery {
+    user {
+      id
+      email
+    }
+  }
+`;
+
+export default graphql(userQuery, {
+  props: ({ data }) => ({ ...data })
+})(NavWrapper);

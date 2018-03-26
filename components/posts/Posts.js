@@ -1,37 +1,46 @@
 import React, { Component } from "react";
-import { Text, View, FlatList } from "react-native";
+import { Text, View, FlatList, ActivityIndicator } from "react-native";
+import { List, ListItem, Body, Right, Icon } from 'native-base';
 import { graphql } from "react-apollo";
 import gql from "graphql-tag";
 
 class Posts extends Component {
   render() {
     const { loading, allPosts, navigation } = this.props;
-    if (loading) return null;
+    if (loading) return <ActivityIndicator size="large" />;
     return (
       <View>
-        <FlatList
-          data={allPosts}
-          renderItem={({ item }) => (
-            <Text
-              onPress={() =>
-                navigation.navigate("Post", {
-                  id: item.id
-                })
-              }
-            >
-              {item.title}
-            </Text>
-          )}
-          keyExtractor={item => item.id}
-        />
-      </View>
+        <List>
+          <FlatList
+            data={allPosts}
+            renderItem={({ item }) => (
+              <ListItem
+                onPress={() =>
+                  navigation.navigate("Post", {
+                    id: item.id,
+                    title: item.title
+                  })
+                }
+              >
+                <Body>
+                  <Text>{item.title}</Text>
+                </Body>
+                <Right>
+                  <Icon name="arrow-forward" />
+                </Right>
+              </ListItem>
+            )}
+            keyExtractor={item => item.id}
+          />
+        </List>
+      </View >
     );
   }
 }
 
 const postsQuery = gql`
-  {
-    allPosts {
+  query postsQuery {
+    allPosts(orderBy: createdAt_DESC) {
       id
       title
     }
