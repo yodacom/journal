@@ -67,10 +67,9 @@ const Navigator = StackNavigator({
 });
 
 const NavWrapper = ({ loading, user }) => {
-  console.log(user);
   if (loading) return <ActivityIndicator size="large" />;
   if (!user) return <Login />;
-  return <Navigator />;
+  return <Navigator screenProps={{ user}}/>;
 };
 
 const userQuery = gql`
